@@ -34,6 +34,7 @@ const App = () => {
     const word = ev.target.elements.inputSearch.value;
     const response = await fetchImages(1, word);
 
+    setPage(2);
     setData(response.data.hits);
     setWord(word);
   };
