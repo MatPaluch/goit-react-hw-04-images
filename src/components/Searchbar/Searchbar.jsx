@@ -1,32 +1,30 @@
-import { Component } from "react";
 import PropTypes from "prop-types";
 import "../styles.css";
 
-export default class Searchbar extends Component {
-  static defaultProps = {};
+const Searchbar = ({ handleSubmit }) => {
+  return (
+    <header className="Searchbar">
+      <form className="SearchForm" onSubmit={handleSubmit}>
+        <button type="submit" className="SearchForm-button">
+          <span className="SearchForm-button-label">Search</span>
+        </button>
 
-  static propTypes = {
-    option: PropTypes.func,
-  };
+        <input
+          name="inputSearch"
+          className="SearchForm-input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          required
+        />
+      </form>
+    </header>
+  );
+};
 
-  render() {
-    return (
-      <header className="Searchbar">
-        <form className="SearchForm" onSubmit={this.props.option}>
-          <button type="submit" className="SearchForm-button">
-            <span className="SearchForm-button-label">Search</span>
-          </button>
+Searchbar.propTypes = {
+  handleSubmit: PropTypes.func,
+};
 
-          <input
-            name="inputSearch"
-            className="SearchForm-input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-        </form>
-      </header>
-    );
-  }
-}
+export default Searchbar;

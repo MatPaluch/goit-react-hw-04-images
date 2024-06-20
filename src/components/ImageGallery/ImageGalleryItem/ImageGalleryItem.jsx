@@ -1,48 +1,45 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "../../styles.css";
 import Modal from "../../Modal/Modal";
 
-export default class ImageGalleryItem extends Component {
-  state = {
-    showModal: false,
-  };
+const ImageGalleryItem = ({ src, alt }) => {
+  const [showModal, setShowModal] = useState(false);
 
-  static propTypes = {
-    id: PropTypes.number,
-    src: PropTypes.string,
-    alt: PropTypes.string,
+  const modal = () => {
+    setShowModal(true);
   };
-  modal = () => {
-    this.setState({ showModal: true });
+  const modalOff = () => {
+    setShowModal(false);
   };
-  modalOff = () => {
-    this.setState({ showModal: false });
-  };
-  modalKey = (ev) => {
+  const modalKey = (ev) => {
     if (ev.key === "Escape") {
-      this.setState({ showModal: false });
+      setShowModal(false);
     }
   };
 
-  componentDidMount() {
+  useEffect(() => {
     const height = document.body.scrollHeight;
     window.scrollTo({ top: height, behavior: "smooth" });
-  }
+  }, []);
 
-  render() {
-    return (
-      <li className="ImageGalleryItem" tabIndex={0} onKeyDown={this.modalKey}>
-        <img
-          src={this.props.src}
-          alt={this.props.alt}
-          className="ImageGalleryItem-image"
-          onClick={this.modal}
-        />
-        {this.state.showModal && (
-          <Modal srcBig={this.props.alt} handleModal={this.modalOff}></Modal>
-        )}
-      </li>
-    );
-  }
-}
+  return (
+    <li className="ImageGalleryItem" tabIndex={0} onKeyDown={modalKey}>
+      <img
+        src={src}
+        alt={alt}
+        className="ImageGalleryItem-image"
+        onClick={modal}
+      />
+      {showModal && <Modal srcBig={alt} handleModal={modalOff}></Modal>}
+    </li>
+  );
+};
+
+ImageGalleryItem.propTypes = {
+  id: PropTypes.number,
+  src: PropTypes.string,
+  alt: PropTypes.string,
+};
+
+export default ImageGalleryItem;

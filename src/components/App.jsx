@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 import Searchbar from "./Searchbar/Searchbar";
@@ -6,69 +6,61 @@ import ImageGallery from "./ImageGallery/ImageGallery";
 import Button from "./Button/Button";
 import Loader from "./Loader/Loader";
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      page: 2,
-      isLoading: false,
-    };
-  }
+const App = () => {
+  const [page, setPage] = useState(2);
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState();
+  const [word, setWord] = useState();
 
-  searchFunc = (ev) => {
+  const fetchImages = async (pag, keyWord) => {
+    const params = new URLSearchParams({
+      key: "43605256-eead80bfe3e75f279f48bfba2",
+      image_type: "photo",
+      orientation: "horizontal",
+      page: pag,
+      per_page: 12,
+      q: keyWord,
+    });
+
+    return await axios.get(`https://pixabay.com/api/?${params}`).finally(() => {
+      setIsLoading(false);
+    });
+  };
+
+  const handleSearch = async (ev) => {
     ev.preventDefault();
+    setIsLoading(true);
+
     const word = ev.target.elements.inputSearch.value;
-    this.fetchData(word, 1);
-    this.setState({ isLoading: true });
+    const response = await fetchImages(1, word);
+
+    setData(response.data.hits);
+    setWord(word);
   };
 
-  async fetchData(keyWord, pag) {
-    const response = await axios
-      .get(
-        `https://pixabay.com/api/?key=43605256-eead80bfe3e75f279f48bfba2&image_type=photo&orientation=horizontal&page=${pag}&per_page=12&q=${keyWord}`,
-      )
-      .finally(() => {
-        this.setState({ isLoading: false });
-      });
-    this.setState({ data: response.data.hits, word: keyWord });
-  }
-
-  handleFetch = (ev) => {
+  const handleFetchMore = async (ev) => {
     ev.preventDefault();
-    this.fetchDataButton(this.state.word, this.state.page);
-    this.setState({ isLoading: true });
+    setIsLoading(true);
+
+    const response = await fetchImages(page, word);
+    setData([...data, ...response.data.hits]);
+    setPage(page + 1);
   };
 
-  async fetchDataButton(keyWord, pag) {
-    const response = await axios
-      .get(
-        `https://pixabay.com/api/?key=43605256-eead80bfe3e75f279f48bfba2&image_type=photo&orientation=horizontal&page=${pag}&per_page=12&q=${keyWord}`,
-      )
-      .finally(() => {
-        this.setState({ isLoading: false });
-      });
-    this.setState((prevState) => ({
-      data: [...prevState.data, ...response.data.hits],
-      page: prevState.page + 1,
-    }));
-  }
-
-  render() {
-    return (
-      <>
-        <div className="App">
-          <Searchbar option={this.searchFunc} />
-          {this.state.data && (
-            <>
-              <ImageGallery data={this.state.data} />
-              <Button buttonHandle={this.handleFetch} />
-            </>
-          )}
-          {this.state.isLoading && <Loader />}
-        </div>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <div className="App">
+        <Searchbar handleSubmit={handleSearch} />
+        {data && (
+          <>
+            <ImageGallery data={data} />
+            <Button buttonHandle={handleFetchMore} />
+          </>
+        )}
+        {isLoading && <Loader />}
+      </div>
+    </>
+  );
+};
 
 export default App;

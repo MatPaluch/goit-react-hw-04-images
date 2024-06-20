@@ -1,20 +1,17 @@
-import { Component } from "react";
 import PropTypes from "prop-types";
 import "../styles.css";
 
-export default class Modal extends Component {
-  static propTypes = {
-    handleModal: PropTypes.func,
-    srcBig: PropTypes.string,
-  };
-
-  render() {
-    return (
-      <div className="Overlay" onClick={this.props.handleModal}>
-        <div className="Modal">
-          <img src={this.props.srcBig} alt="" />
-        </div>
+const Modal = ({ handleModal, srcBig }) => {
+  return (
+    <div className="Overlay" onClick={handleModal}>
+      <div className="Modal">
+        <img src={srcBig} alt="" />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+Modal.propTypes = {
+  handleModal: PropTypes.func,
+  srcBig: PropTypes.string,
+};
+export default Modal;
