@@ -7,7 +7,7 @@ import Button from "./Button/Button";
 import Loader from "./Loader/Loader";
 
 const App = () => {
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
   const [word, setWord] = useState();
