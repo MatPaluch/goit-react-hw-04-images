@@ -1,4 +1,6 @@
-# React + Vite
+# Refactory to function component using hooks
+
+## This project using React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
